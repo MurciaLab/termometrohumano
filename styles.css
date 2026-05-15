@@ -1,0 +1,618 @@
+:root {
+  /* Lienzo: piedra caliza tibia (sustituye al off-white anterior) */
+  --bg-neutral: #F2EBDB;
+  --text: #2A2823;
+  --text-muted: #756E60;
+
+  /* Lado FRESCO: acequia y huerta (verde oliva apagado) */
+  --fresh-bg:           #B7C5AC;
+  --fresh-bg-vivid:     #A4B594;
+  --fresh-accent:       #5C7150;
+  --fresh-accent-strong:#3F5236;
+  --fresh-soft:         #D1D9C4;
+
+  /* Lado CALOR: adobe asoleado (arcilla y barro cocido) */
+  --hot-bg:           #E0B999;
+  --hot-bg-vivid:     #D1A37D;
+  --hot-accent:       #A66243;
+  --hot-accent-strong:#7E4A30;
+  --hot-soft:         #EDD2BB;
+
+  /* Botón principal: verde higuera sólido cuando activo */
+  --primary-active-bg:    #3F5236;
+  --primary-active-hover: #2D3E26;
+  --primary-active-text:  #F2EBDB;
+  --primary-disabled-bg:    #DBD3C2;
+  --primary-disabled-text:  #A8A08E;
+
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-pill: 100px;
+
+  --shadow-sm: 0 1px 2px rgba(60, 50, 30, 0.04);
+  --shadow-md: 0 8px 24px rgba(40, 40, 30, 0.08);
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Manrope", system-ui, -apple-system, sans-serif;
+
+  --ease: cubic-bezier(.4, 0, .2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* El atributo [hidden] debe ganar siempre, incluso sobre display:flex */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg-neutral);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* === DESKTOP: la página entera se parte verticalmente en dos mundos === */
+@media (min-width: 721px) {
+  body {
+    background: linear-gradient(
+      to right,
+      var(--fresh-bg) 0,
+      var(--fresh-bg) 50%,
+      var(--hot-bg) 50%,
+      var(--hot-bg) 100%
+    );
+  }
+}
+
+/* ===== Hero (sobre el split) ============================================ */
+.hero {
+  text-align: center;
+  padding: 56px 24px 32px;
+  max-width: 880px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.95rem, 3.6vw + 0.8rem, 2.9rem);
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  margin: 0 0 14px;
+  color: var(--text);
+}
+
+.subtitle {
+  margin: 0 auto;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 46ch;
+}
+
+/* ===== Duo (los dos mundos, full-bleed) ================================= */
+.duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  /* sin gap: los dos mundos se tocan en el centro */
+}
+
+.slot {
+  position: relative;
+  padding: 40px 32px 36px;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background 400ms var(--ease);
+}
+
+/* Cada lado tiene su propio fondo. En desktop coincide con el body, en
+   móvil es lo que crea la división al apilar. Al rellenarse, gana intensidad. */
+.slot--fresh {
+  background: var(--fresh-bg);
+  --side-bg-vivid:      var(--fresh-bg-vivid);
+  --side-accent:        var(--fresh-accent);
+  --side-accent-strong: var(--fresh-accent-strong);
+  --side-soft:          var(--fresh-soft);
+}
+
+.slot--hot {
+  background: var(--hot-bg);
+  --side-bg-vivid:      var(--hot-bg-vivid);
+  --side-accent:        var(--hot-accent);
+  --side-accent-strong: var(--hot-accent-strong);
+  --side-soft:          var(--hot-soft);
+}
+
+.slot.is-filled {
+  background: var(--side-bg-vivid);
+}
+
+/* ===== Chip VS entre los dos mundos ===================================== */
+.vs {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #F2EBDB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  z-index: 3;
+  box-shadow: 0 8px 24px rgba(40, 40, 30, 0.14),
+              0 0 0 6px rgba(242, 235, 219, 0.4);
+}
+
+/* ===== Cabecera de cada lado ============================================ */
+.slot-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 14px;
+  text-align: left;
+  max-width: 460px;
+}
+
+.slot-emoji {
+  font-size: clamp(28px, 5.5vw, 36px);
+  line-height: 1;
+  display: inline-block;
+}
+
+.slot-header-text {
+  min-width: 0;
+}
+
+.slot-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.2rem, 3.4vw, 1.5rem);
+  line-height: 1.2;
+  margin: 0 0 2px;
+  color: var(--text);
+}
+
+.slot-sub {
+  margin: 0;
+  font-size: clamp(0.88rem, 2.4vw, 0.95rem);
+  line-height: 1.35;
+  color: var(--side-accent-strong);
+  opacity: 0.85;
+}
+
+/* ===== Caja interior de carga (estado vacío) ============================ */
+.slot-empty {
+  flex: 1;
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 36px 24px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(242, 235, 219, 0.55);
+  border: 2px dashed rgba(242, 235, 219, 0.95);
+  border-radius: var(--radius-xl);
+  transition: transform 240ms var(--ease),
+              background 240ms var(--ease),
+              box-shadow 240ms var(--ease),
+              border-color 240ms var(--ease);
+}
+
+.slot-empty:hover,
+.slot-empty:focus-within {
+  transform: translateY(-2px);
+  background: rgba(242, 235, 219, 0.9);
+  border-color: #F2EBDB;
+  box-shadow: 0 8px 22px rgba(40, 40, 30, 0.08);
+}
+
+.slot-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.slot-plus {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #F8F3E5;
+  color: var(--side-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 1;
+  box-shadow: var(--shadow-sm);
+  transition: transform 240ms var(--ease);
+}
+
+.slot-empty:hover .slot-plus {
+  transform: scale(1.06);
+}
+
+.slot-cta {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.slot-hint {
+  font-size: 0.88rem;
+  color: var(--side-accent-strong);
+  opacity: 0.8;
+}
+
+/* ===== Estado lleno ===================================================== */
+.slot-filled {
+  flex: 1;
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  animation: fadeInUp 320ms var(--ease);
+}
+
+.slot-preview {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.5);
+  display: block;
+}
+
+.slot-meta-row {
+  padding: 0 4px;
+  min-width: 0;
+  font-size: clamp(0.7rem, 2.1vw, 0.78rem);
+  color: var(--side-accent-strong);
+  opacity: 0.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  letter-spacing: 0.005em;
+}
+
+.slot-meta-row .slot-filename,
+.slot-meta-row .slot-meta {
+  display: inline;
+  margin: 0;
+  font-size: inherit;
+  font-weight: 500;
+  color: inherit;
+}
+
+.slot-meta-row .slot-filename::after {
+  content: " · ";
+  opacity: 0.6;
+}
+
+.slot-meta-row .slot-filename:empty,
+.slot-meta-row .slot-filename:empty::after {
+  display: none;
+}
+
+/* El pin del GPS debe sentirse metadato, no contenido */
+.slot-meta .has-gps {
+  font-weight: 500;
+}
+
+.slot-meta-row {
+  /* Apaga ligeramente cualquier emoji (📍) sin desaturarlo del todo */
+  -webkit-font-smoothing: antialiased;
+}
+
+.slot-meta .has-gps::first-letter {
+  /* El primer carácter es 📍 — lo bajamos un puntito */
+  font-size: 0.92em;
+}
+
+.slot-change {
+  align-self: flex-start;
+  margin-top: 2px;
+  min-height: 32px;
+  background: rgba(248, 243, 229, 0.7);
+  color: var(--side-accent-strong);
+  border: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: clamp(0.78rem, 2.4vw, 0.88rem);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 220ms var(--ease),
+              transform 120ms var(--ease);
+}
+
+.slot-change:hover {
+  background: #F8F3E5;
+  transform: translateY(-1px);
+}
+
+.slot-change:active {
+  transform: translateY(0);
+}
+
+/* ===== Overlay "Procesando…" ============================================ */
+.slot-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  z-index: 2;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-top-color: var(--side-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade suave del contenido al reiniciar tras subida correcta */
+.slot.is-resetting .slot-filled {
+  opacity: 0;
+  transition: opacity 280ms var(--ease);
+}
+
+/* ===== Bottom (botón + nota + status) =================================== */
+.bottom {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 44px 24px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.primary-btn {
+  width: 100%;
+  min-height: 60px;
+  padding: 18px 24px;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  /* Estado activo: verde higuera sólido, sin gradiente azucarado */
+  background: var(--primary-active-bg);
+  color: var(--primary-active-text);
+  box-shadow: 0 6px 18px rgba(63, 82, 54, 0.22);
+  /* Inline-flex para alojar spinner + etiqueta centrados */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background 280ms var(--ease),
+              color 280ms var(--ease),
+              transform 120ms var(--ease),
+              box-shadow 280ms var(--ease),
+              opacity 280ms var(--ease);
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: var(--primary-active-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(63, 82, 54, 0.28);
+}
+
+/* Spinner integrado en el botón durante la subida */
+.btn-spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(242, 235, 219, 0.35);
+  border-top-color: var(--primary-active-text);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.primary-btn.is-loading .btn-spinner {
+  display: inline-block;
+}
+
+/* En estado "loading" o "success" el botón sigue mostrando el color
+   verde higuera aunque esté disabled (no debe verse apagado). */
+.primary-btn.is-loading:disabled,
+.primary-btn.is-success:disabled {
+  background: var(--primary-active-bg);
+  color: var(--primary-active-text);
+  box-shadow: 0 6px 18px rgba(63, 82, 54, 0.22);
+  opacity: 0.95;
+  cursor: default;
+}
+
+.primary-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.primary-btn:disabled {
+  background: var(--primary-disabled-bg);
+  color: var(--primary-disabled-text);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===== Nota inferior ==================================================== */
+.footer-note {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0 auto;
+}
+
+/* ===== Toast flotante de feedback ======================================= */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+
+  max-width: calc(100vw - 32px);
+  padding: 14px 24px;
+  border-radius: 999px;
+
+  font-family: var(--font-body);
+  font-size: 0.96rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+  text-align: center;
+
+  background: #F8F3E5;
+  color: var(--text);
+
+  box-shadow: 0 8px 30px rgba(40, 40, 30, 0.10),
+              0 2px 8px rgba(40, 40, 30, 0.06);
+
+  transition: opacity 280ms var(--ease),
+              transform 280ms var(--ease);
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.toast--success {
+  background: var(--fresh-soft);
+  color: var(--fresh-accent-strong);
+}
+
+.toast--info {
+  background: #F8F3E5;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.toast--error {
+  background: var(--hot-soft);
+  color: var(--hot-accent-strong);
+}
+
+@media (max-width: 720px) {
+  .toast {
+    bottom: 18px;
+    padding: 13px 20px;
+    font-size: 0.92rem;
+  }
+}
+
+/* ===== Móvil: apilamos los dos mundos =================================== */
+@media (max-width: 720px) {
+  .hero {
+    padding: 22px 20px 16px;
+  }
+
+  .hero h1 {
+    margin-bottom: 8px;
+  }
+
+  /* El chip VS solo tiene sentido en la división vertical de escritorio */
+  .vs {
+    display: none;
+  }
+
+  .duo {
+    grid-template-columns: 1fr;
+  }
+
+  .slot {
+    min-height: auto;
+    padding: 24px 20px 22px;
+  }
+
+  .slot-plus {
+    width: 56px;
+    height: 56px;
+    font-size: 30px;
+  }
+
+  .slot-empty {
+    margin-top: 16px;
+    padding: 28px 20px;
+  }
+
+  .slot-filled {
+    margin-top: 16px;
+  }
+
+  /* La foto confirma, no protagoniza */
+  .slot-preview {
+    max-height: 240px;
+    aspect-ratio: 4 / 3;
+  }
+
+  .bottom {
+    padding: 28px 20px 40px;
+    gap: 14px;
+  }
+
+  .primary-btn {
+    min-height: 56px;
+    font-size: 1rem;
+  }
+}

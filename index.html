@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mapa térmico ciudadano</title>
+  <meta
+    name="description"
+    content="Ayúdanos a crear un mapa ciudadano del calor."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,500;9..144,0,600;9..144,1,500;9..144,1,600&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Lectura de EXIF (GPS y fecha) en cliente -->
+  <script src="https://cdn.jsdelivr.net/npm/exif-js@2.3.0/exif.js" defer></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1>Tus sitios cuando aprieta el calor</h1>
+    <p class="subtitle">
+      Comparte dos lugares de Murcia: uno donde se está bien y otro donde no hay quien pare.
+    </p>
+  </header>
+
+  <section class="duo">
+    <!-- Lado FRESCO -->
+    <article
+      class="slot slot--fresh"
+      data-index="0"
+      aria-label="Sitio agradable térmicamente"
+    >
+      <div class="slot-header">
+        <span class="slot-emoji" aria-hidden="true">🌳</span>
+        <div class="slot-header-text">
+          <h2 class="slot-heading">Aquí se está bien</h2>
+          <p class="slot-sub">Un sitio donde te quedarías</p>
+        </div>
+      </div>
+
+      <label class="slot-empty">
+        <input type="file" accept="image/*" class="slot-input" />
+        <span class="slot-plus" aria-hidden="true">+</span>
+        <span class="slot-cta">Añadir foto</span>
+        <span class="slot-hint">Toca para seleccionar una imagen</span>
+      </label>
+
+      <div class="slot-filled" hidden>
+        <img class="slot-preview" alt="Vista previa del sitio agradable" />
+        <div class="slot-meta-row">
+          <p class="slot-filename"></p>
+          <p class="slot-meta"></p>
+        </div>
+        <button type="button" class="slot-change">
+          <span aria-hidden="true">↺</span> Cambiar
+        </button>
+      </div>
+
+      <div class="slot-loading" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Procesando…</span>
+      </div>
+    </article>
+
+    <!-- Chip central VS -->
+    <div class="vs" aria-hidden="true">vs</div>
+
+    <!-- Lado CALOR -->
+    <article
+      class="slot slot--hot"
+      data-index="1"
+      aria-label="Sitio caluroso e incómodo"
+    >
+      <div class="slot-header">
+        <span class="slot-emoji" aria-hidden="true">☀️</span>
+        <div class="slot-header-text">
+          <h2 class="slot-heading">Aquí no hay quien pare</h2>
+          <p class="slot-sub">Un sitio del que te vas</p>
+        </div>
+      </div>
+
+      <label class="slot-empty">
+        <input type="file" accept="image/*" class="slot-input" />
+        <span class="slot-plus" aria-hidden="true">+</span>
+        <span class="slot-cta">Añadir foto</span>
+        <span class="slot-hint">Toca para seleccionar una imagen</span>
+      </label>
+
+      <div class="slot-filled" hidden>
+        <img class="slot-preview" alt="Vista previa del sitio caluroso" />
+        <div class="slot-meta-row">
+          <p class="slot-filename"></p>
+          <p class="slot-meta"></p>
+        </div>
+        <button type="button" class="slot-change">
+          <span aria-hidden="true">↺</span> Cambiar
+        </button>
+      </div>
+
+      <div class="slot-loading" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Procesando…</span>
+      </div>
+    </article>
+  </section>
+
+  <div class="bottom">
+    <button id="upload-btn" class="primary-btn" type="button" disabled>
+      <span class="btn-spinner" aria-hidden="true"></span>
+      <span class="btn-text">Añadir al mapa térmico</span>
+    </button>
+
+    <p class="footer-note">
+      Un mapa ciudadano del calor en Murcia.
+    </p>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
